@@ -5,8 +5,8 @@
 venv/
 
 #Python cache files
-_pycache_
-*.py[cod]
+_pycache_/
+*.pyc
 
 # Archivos de Node
 node_modules/
