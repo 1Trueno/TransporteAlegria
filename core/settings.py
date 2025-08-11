@@ -53,6 +53,8 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware", # For serving static files in production
 ]
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
