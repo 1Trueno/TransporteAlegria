@@ -4,3 +4,12 @@
 #Virtual Envioremt
 venv/
 
+#Python cache files
+_pycache_
+*.py[cod]
+
+# Archivos de Node
+node_modules/
+
+# Archivos de compilación de Tailwind CSS
+core/static/src/output.css
