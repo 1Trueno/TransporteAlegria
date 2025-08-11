@@ -1,0 +1,6 @@
+#Conexion to SQL Server
+.env
+
+#Virtual Envioremt
+venv/
+
