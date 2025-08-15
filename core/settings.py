@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-+*9(2h!ark(@e1(13_tg35bw=ep2%a!s6+^-2f6grz6p&s15(#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app", "localhost",]
+# ALLOWED_HOSTS = [".vercel.app", "localhost", AND TEST HOST]
+ALLOWED_HOSTS = [".vercel.app", "localhost","127.0.0.1","report.letscamp.org"]
 
 
 # Application definition
@@ -132,7 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'core', 'static'),
-    
+    os.path.join(BASE_DIR, 'api', 'static'),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     {% load static %}
-    <link href="{% static 'src/output.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/navbar.css' %}?v=1.2" rel="stylesheet" />
+    <link href="/static/src/output.css?v=1.2" rel="stylesheet" />
   </head>
   <body
     class="bg-gradient-to-b from-blue-100 to-blue-300 flex items-center justify-center h-screen"
@@ -16,36 +17,65 @@
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->
           <div class="flex-shrink-0 flex items-center">
-            <div
-              class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center"
-            >
-              <!-- Aquí puedes poner tu imagen con <img> -->
-              <span class="text-gray-600 font-bold">Logo</span>
+            <div class="flex items-center gap-3">
+              <!-- Texto del logo -->
+              <div class="flex items-center">
+                <span class="text-2xl font-bold text-blue-400 mr-1">
+                  Transporte
+                </span>
+                <span class="text-2xl font-bold text-gray-300">
+                  Alegría
+                </span>
+              </div>
+
+              <!-- Logo -->
+              <div
+                class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center"
+              >
+                <!-- Aquí puedes poner tu imagen con <img> -->
+                <img
+                  src="{% static 'images/logoOriginal.png' %}"
+                  alt="Logo"
+                  class="w-12 h-12"
+                />
+              </div>
             </div>
           </div>
 
           <!-- Links -->
-          <div class="hidden md:flex space-x-6">
-            <a
-              href="#"
-              class="text-gray-700 hover:text-blue-500 font-medium transition"
-              >Inicio</a
+          <div class="hidden md:flex">
+            <button
+              onclick="window.location.href='#'"
+              class="nav-button text-gray-700 hover:text-blue-500 px-3 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
             >
-            <a
-              href="#"
-              class="text-gray-700 hover:text-blue-500 font-medium transition"
-              >Servicios</a
+              Inicio
+              <div class="line-bottom-h"></div>
+              <div class="line-bottom-v"></div>
+            </button>
+            <button
+              onclick="window.location.href='#'"
+              class="nav-button text-gray-700 hover:text-blue-500 px-3 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
             >
-            <a
-              href="#"
-              class="text-gray-700 hover:text-blue-500 font-medium transition"
-              >Inscripción</a
+              Servicios
+              <div class="line-bottom-h"></div>
+              <div class="line-bottom-v"></div>
+            </button>
+            <button
+              onclick="window.location.href='#'"
+              class="nav-button text-gray-700 hover:text-blue-500 px-3 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
             >
-            <a
-              href="#"
-              class="text-gray-700 hover:text-blue-500 font-medium transition"
-              >Contacto</a
+              Inscripción
+              <div class="line-bottom-h"></div>
+              <div class="line-bottom-v"></div>
+            </button>
+            <button
+              onclick="window.location.href='#'"
+              class="nav-button text-gray-700 hover:text-blue-500 px-3 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out"
             >
+              Contacto
+              <div class="line-bottom-h"></div>
+              <div class="line-bottom-v"></div>
+            </button>
           </div>
 
           <!-- Botón -->
@@ -84,19 +114,36 @@
 
       <!-- Menú móvil desplegable -->
       <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2">
-        <a href="#" class="block text-gray-700 hover:text-blue-500">Inicio</a>
-        <a href="#" class="block text-gray-700 hover:text-blue-500"
-          >Servicios</a
+        <button
+          onclick="window.location.href='#'"
+          class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg w-full text-left transition-all duration-200"
         >
-        <a href="#" class="block text-gray-700 hover:text-blue-500"
-          >Inscripción</a
+          Inicio
+        </button>
+        <button
+          onclick="window.location.href='#'"
+          class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg w-full text-left transition-all duration-200"
         >
-        <a href="#" class="block text-gray-700 hover:text-blue-500">Contacto</a>
-        <a
-          href="#"
-          class="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >Reservar</a
+          Servicios
+        </button>
+        <button
+          onclick="window.location.href='#'"
+          class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg w-full text-left transition-all duration-200"
         >
+          Inscripción
+        </button>
+        <button
+          onclick="window.location.href='#'"
+          class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 px-3 py-2 rounded-lg w-full text-left transition-all duration-200"
+        >
+          Contacto
+        </button>
+        <button
+          onclick="window.location.href='#'"
+          class="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full transition-all duration-200"
+        >
+          Reservar
+        </button>
       </div>
     </nav>
 
