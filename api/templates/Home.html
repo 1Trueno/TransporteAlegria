@@ -6,33 +6,27 @@
     <title>Home</title>
     {% load static %}
     <link href="{% static 'css/navbar.css' %}?v=1.2" rel="stylesheet" />
+    <link href="{% static 'css/animaciones.css' %}" rel="stylesheet" />
     <link href="/static/src/output.css?v=1.2" rel="stylesheet" />
   </head>
   <body
     class="bg-gradient-to-b from-blue-100 to-blue-300 flex items-center justify-center h-screen"
   >
-    <!-- NAVBAR -->
     <nav class="bg-white shadow-md fixed w-full z-10 top-0 left-0">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-          <!-- Logo -->
           <div class="flex-shrink-0 flex items-center">
             <div class="flex items-center gap-3">
-              <!-- Texto del logo -->
               <div class="flex items-center">
-                <!-- Colores que no se saben aun cuales seran -->
                 <span class="text-2xl font-bold text-blue-600 mr-1">
                   Transporte
                 </span>
                 <span class="text-2xl font-bold text-red-500"> Alegría </span>
               </div>
 
-              <!-- Logo -->
-              <!-- mismo logo que lleva una animacion para colocar a continuacion -->
               <div
                 class="w-12 h-12 bg-white rounded-full flex items-center justify-center"
               >
-                <!-- Aquí puedes poner tu imagen con <img> -->
                 <img
                   src="{% static 'images/logoOriginal.png' %}"
                   alt="Logo"
@@ -42,7 +36,6 @@
             </div>
           </div>
 
-          <!-- Links de windows -->
           <div class="hidden md:flex">
             <button
               onclick="window.location.href='#'"
@@ -78,17 +71,15 @@
             </button>
           </div>
 
-          <!-- Botón de inscripcion-->
           <div class="hidden md:flex">
             <a
               href="#"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition transform hover:scale-105 float-up"
             >
-              Reservar
+              Inscribete
             </a>
           </div>
 
-          <!-- Menú móvil -->
           <div class="md:hidden flex items-center">
             <button
               id="mobile-menu-btn"
@@ -112,7 +103,6 @@
         </div>
       </div>
 
-      <!-- Menú móvil desplegable -->
       <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 space-y-2">
         <button
           onclick="window.location.href='#'"
@@ -155,14 +145,51 @@
         });
     </script>
 
-    <!-- Contenido de la página -->
-    <div class="pt-20 flex flex-col items-center justify-center text-center">
-      <h1 class="text-4xl font-bold text-blue-800">
-        Bienvenido a Transporte Alegría
-      </h1>
-      <p class="mt-4 text-lg text-gray-700 max-w-2xl">
-        Tu transporte confiable y seguro para llegar a donde necesites.
-      </p>
-    </div>
+    <section
+      class="relative w-full bg-gradient-to-r from-blue-50 to-blue-100 py-20 min-h-screen"
+    >
+      <div class="flex h-full">
+        <div
+          class="w-1/2 flex items-center justify-center lg:justify-start pl-0"
+        >
+          <div class="relative w-80 h-96">
+            <h2
+              class="text-white text-3xl font-bold text-center px-4 relative z-20"
+            >
+              Bienvenido a Transporte Alegría
+            </h2>
+            <img
+              src="{% static 'images/Libros.jpg' %}"
+              alt="Libros"
+              class="w-full h-full object-cover rounded-lg shadow-lg"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-60 rounded-lg flex items-center justify-center z-10"
+            ></div>
+          </div>
+        </div>
+
+        <div class="w-1/2 flex flex-col justify-center space-y-12 px-12">
+          <div>
+            <h2 class="text-4xl font-bold text-blue-800 mb-6">
+              Sobre nosotros
+            </h2>
+            <p class="text-gray-700 text-lg leading-relaxed mb-4">
+              En <strong>Transporte Alegría</strong> nos apasiona ofrecer un
+              servicio de transporte confiable, seguro y cómodo para
+              estudiantes, trabajadores y familias. Nuestra misión es llevarte a
+              tu destino con puntualidad y tranquilidad, asegurando que cada
+              viaje sea una experiencia positiva.
+            </p>
+            <p class="text-gray-700 text-lg leading-relaxed">
+              Contamos con un equipo comprometido y unidades modernas que
+              garantizan calidad, seguridad y confianza. Nos esforzamos en crear
+              una comunidad de pasajeros satisfechos, donde cada trayecto se
+              convierta en parte de tu día con alegría y confianza.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
 </html>

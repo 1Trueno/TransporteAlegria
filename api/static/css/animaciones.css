@@ -1,0 +1,13 @@
+/*Esta es la animacion del boton inscripcion que funcionara con el hover*/
+@keyframes floatUp {
+  0%, 100% {
+    transform: translateY(2px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.float-up {
+  animation: floatUp 1.2s ease-in-out infinite;
+}
