@@ -1,0 +1,49 @@
+# === DJANGO (TransporteApi) ===
+TransporteApi/*.pyc
+TransporteApi/__pycache__/
+TransporteApi/db.sqlite3
+TransporteApi/*.sqlite3
+TransporteApi/.env
+TransporteApi/.env.*
+TransporteApi/*.log
+TransporteApi/media/
+TransporteApi/staticfiles/
+TransporteApi/local_settings.py
+TransporteApi/.venv/
+TransporteApi/venv/
+TransporteApi/env/
+TransporteApi/.mypy_cache/
+TransporteApi/.pytest_cache/
+TransporteApi/core/__pycache__
+TransporteApi/core/_init__.py
+TransporteApi/api/__pycache__
+TransporteApi/api/_init__.py
+TransporteApi/management
+
+
+
+
+# VSCode settings
+.vscode/
+
+# === REACT (TransporteAlegriaFrontend) ===
+TransporteAlegriaFrontend/node_modules/
+TransporteAlegriaFrontend/.pnp
+TransporteAlegriaFrontend/.pnp.js
+TransporteAlegriaFrontend/coverage/
+TransporteAlegriaFrontend/build/
+TransporteAlegriaFrontend/.env.local
+TransporteAlegriaFrontend/.env.development.local
+TransporteAlegriaFrontend/.env.test.local
+TransporteAlegriaFrontend/.env.production.local
+TransporteAlegriaFrontend/npm-debug.log*
+TransporteAlegriaFrontend/yarn-debug.log*
+TransporteAlegriaFrontend/yarn-error.log*
+
+# === GENERAL ===
+*.swp
+*.swo
+.idea/
+*.bak
+*.tmp
+.DS_Store

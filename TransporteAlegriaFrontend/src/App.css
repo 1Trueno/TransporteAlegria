@@ -1,0 +1,156 @@
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+
+
+/* Hover personalizado para el navbar */
+.nav-button {
+  position: relative;
+  overflow: visible;
+  margin: 4px 2px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.nav-button:first-child {
+  margin-left: 0;
+}
+
+.nav-button:last-child {
+  margin-right: 0;
+}
+
+.nav-button::before,
+.nav-button::after {
+  content: '';
+  position: absolute;
+  background: #3b82f6;
+  transition: all 0.4s ease;
+  opacity: 0;
+  border-radius: 1px;
+}
+
+/* Línea superior (horizontal) */
+.nav-button::before {
+  top: -4px;
+  left: -8px;
+  width: calc(100% + 16px);
+  height: 2.5px;
+  border-radius: 3px;
+}
+
+/* Línea superior (vertical) */
+.nav-button::after {
+  top: -6px;
+  right: -4px;
+  width: 2.5px;
+  height: calc(100% + 10px);
+  border-radius: 3px;
+}
+
+/* Línea inferior (horizontal) */
+.nav-button .line-bottom-h {
+  position: absolute;
+  bottom: -4px;
+  right: -8px;
+  width: calc(100% + 16px);
+  height: 2.5px;
+  background: #3b82f6;
+  transition: all 0.4s ease;
+  opacity: 0;
+  border-radius: 3px;
+}
+
+/* Línea inferior (vertical) */
+.nav-button .line-bottom-v {
+  position: absolute;
+  bottom: -6px;
+  left: -4px;
+  width: 2.5px;
+  height: calc(100% + 10px);
+  background: #3b82f6;
+  transition: all 0.4s ease;
+  opacity: 0;
+  border-radius: 3px;
+}
+
+/* Efecto hover */
+.nav-button:hover::before {
+  left: -8px;
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nav-button:hover::after {
+  top: -6px;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.nav-button:hover .line-bottom-h {
+  right: -8px;
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nav-button:hover .line-bottom-v {
+  bottom: -6px;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* Estado inicial con transform */
+.nav-button::before {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.nav-button::after {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.nav-button .line-bottom-h {
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.nav-button .line-bottom-v {
+  transform: scaleY(0);
+  transform-origin: bottom;
+}
