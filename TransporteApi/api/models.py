@@ -121,15 +121,12 @@ class Padres(models.Model):
     # Campo para aprobar el formulario del padre
     aprobado = models.BooleanField(default=False)
     
-    # Fecha de creación del formulario
-    fecha_formulario = models.DateTimeField(auto_now_add=True)
-    
-    # Fecha de expiración del formulario (se elimina automáticamente después de esta fecha)
-    fecha_expiracion = models.DateTimeField(null=True, blank=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)  # Fecha de creación automática
+   
 
     def __str__(self):
         """Representación en string del padre"""
-        return f"{self.usuario.nombre} {self.usuario.apellido}"
+        return f"{self.usuario.nombre if self.usuario else 'Padre sin usuario'}" 
 
 
 class Estudiantes(models.Model):

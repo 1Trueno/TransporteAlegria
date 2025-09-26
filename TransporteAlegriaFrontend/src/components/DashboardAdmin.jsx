@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../services/api";
 
-const PanelAdmin = () => {
+const DashboardAdmin = () => {
   const [formularios, setFormularios] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -401,4 +401,4 @@ const PanelAdmin = () => {
   );
 };
 
-export default PanelAdmin;
+export default DashboardAdmin;

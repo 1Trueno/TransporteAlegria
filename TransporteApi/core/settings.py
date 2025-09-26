@@ -14,12 +14,14 @@ from pathlib import Path
 import os   # Importa el módulo os para manejar variables de entorno
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))  # Carga las variables de entorno desde el archivo .env
+# Carga las variables de entorno desde el archivo .env
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(os.path.join(BASE_DIR, '.env'))  # Carga las variables de entorno desde el archivo .env en la raíz del proyecto
+# Carga las variables de entorno desde el archivo .env en la raíz del proyecto
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -46,12 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',        # Framework para sesiones
     'django.contrib.messages',        # Framework para mensajes
     'django.contrib.staticfiles',     # Framework para archivos estáticos
-    
+
     # Aplicaciones de terceros
     'rest_framework',                 # Framework para APIs REST
     'rest_framework.authtoken',       # Sistema de tokens de autenticación
-    'corsheaders',                    # Manejo de CORS (Cross-Origin Resource Sharing)
-    
+    # Manejo de CORS (Cross-Origin Resource Sharing)
+    'corsheaders',
+
     # Aplicaciones locales
     'api',                           # Nuestra aplicación principal
 ]
@@ -61,8 +64,9 @@ INSTALLED_APPS = [
 # ============================================================================
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',        # Maneja CORS (debe ir primero)
-    'django.middleware.security.SecurityMiddleware', # Seguridad
+    # Maneja CORS (debe ir primero)
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',  # Seguridad
     'django.contrib.sessions.middleware.SessionMiddleware',  # Sesiones
     'django.middleware.common.CommonMiddleware',    # Funcionalidad común
     'django.middleware.csrf.CsrfViewMiddleware',     # Protección CSRF
@@ -100,7 +104,8 @@ DATABASES = {
         'ENGINE': 'mssql',            # Motor de base de datos: SQL Server
         'NAME': os.getenv('DB_NAME'),    # Nombre de la base de datos
         'USER': os.getenv('DB_USER'),     # Usuario de la base de datos
-        'PASSWORD': os.getenv('DB_PASSWORD'),     # Contraseña de la base de datos
+        # Contraseña de la base de datos
+        'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),           # Servidor de la base de datos
         'PORT': '',                   # Puerto (vacío = puerto por defecto)
         'OPTIONS': {
@@ -200,11 +205,17 @@ CORS_ALLOW_METHODS = [
 # ============================================================================
 
 REST_FRAMEWORK = {
+    # Clases de autenticacion por defecto
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+
     # Permisos por defecto para todas las vistas
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Permite acceso sin autenticación por defecto
+        # Permite acceso sin autenticación por defecto
+        'rest_framework.permissions.AllowAny',
     ],
-    
+
     # Renderizadores por defecto (formato de respuesta)
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',  # Respuestas en formato JSON
@@ -225,4 +236,5 @@ EMAIL_HOST_PASSWORD = 'aixr qssh ijtz vlhf'  # Contraseña de aplicación de Gma
 
 # Configuración adicional
 EMAIL_USE_SSL = False  # No usar SSL (usamos TLS)
-DEFAULT_FROM_EMAIL = 'livecoding0910@gmail.com'  # Email desde el cual se envían los correos
+# Email desde el cual se envían los correos
+DEFAULT_FROM_EMAIL = 'livecoding0910@gmail.com'

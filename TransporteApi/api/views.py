@@ -4,7 +4,8 @@ from django.shortcuts import render
 from rest_framework import status, generics
 # Decoradores para vistas
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser  # Permisos de acceso
+# Permisos de acceso
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response  # Para respuestas HTTP
 # Para manejar tokens de autenticación
 from rest_framework.authtoken.models import Token
@@ -18,14 +19,12 @@ from django.http import JsonResponse  # Para respuestas JSON
 from .models import Usuario, Padres, Estudiantes, Tutor_receptor
 from .serializers import (
     UsuarioSerializer, RegistroSerializer, LoginSerializer,
-    PadresSerializer, EstudiantesSerializer, TutorReceptorSerializer,FormularioSerializer,
+    PadresSerializer, EstudiantesSerializer, TutorReceptorSerializer, FormularioSerializer,
     EstudiantesSerializer
 )
 
 # Importar utilidades de email
 from .email_utils import enviar_email_verificacion, enviar_email_bienvenida
-
-
 
 
 def home(request):
@@ -56,23 +55,23 @@ def home(request):
 def registro_usuario(request):
     """
     Endpoint para registrar un nuevo usuario.
-    
+
     Args:
         request: Objeto de petición HTTP con datos del formulario
-    
+
     Returns:
         Response: Usuario creado (sin token hasta verificar email)
     """
     # Validar y procesar los datos del formulario
     serializer = RegistroSerializer(data=request.data)
-    
+
     if serializer.is_valid():
         # Crear el usuario (pero no está verificado aún)
         user = serializer.save()
-        
+
         # Enviar email de verificación
         email_enviado = enviar_email_verificacion(user)
-        
+
         if email_enviado:
             # Retornar respuesta exitosa
             return Response({
@@ -87,7 +86,7 @@ def registro_usuario(request):
             return Response({
                 'error': 'Error enviando email de verificación. Intenta nuevamente.'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
     # Si hay errores de validación, retornar los errores
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -97,32 +96,32 @@ def registro_usuario(request):
 def verificar_email(request, token):
     """
     Endpoint para verificar el email del usuario usando el token.
-    
+
     Args:
         request: Objeto de petición HTTP
         token: Token de verificación enviado por email
-    
+
     Returns:
         Response: Confirmación de verificación exitosa
     """
     try:
         # Buscar usuario con el token de verificación
         usuario = Usuario.objects.get(token_verificacion=token)
-        
+
         # Marcar email como verificado
         usuario.email_verificado = True
         usuario.token_verificacion = None  # Limpiar el token usado
         usuario.save()
-        
+
         # Enviar email de bienvenida
         enviar_email_bienvenida(usuario)
-        
+
         return Response({
             'message': 'Email verificado exitosamente. Ya puedes iniciar sesión.',
             'email_verificado': True,
             'usuario': UsuarioSerializer(usuario).data
         }, status=status.HTTP_200_OK)
-        
+
     except Usuario.DoesNotExist:
         return Response({
             'error': 'Token de verificación inválido o expirado.'
@@ -147,23 +146,23 @@ def login_usuario(request):
     """
     # Validar las credenciales
     serializer = LoginSerializer(data=request.data)
-    
+
     if serializer.is_valid():
         # Obtener el usuario autenticado
         user = serializer.validated_data['user']
-        
+
         # Verificar que el email esté confirmado
         if not user.email_verificado:
             return Response({
                 'error': 'Debes verificar tu email antes de poder iniciar sesión. Revisa tu correo electrónico.'
             }, status=status.HTTP_403_FORBIDDEN)
-        
+
         # Iniciar sesión (para compatibilidad con Django)
         login(request, user)
-        
+
         # Crear o obtener el token de autenticación
         token, created = Token.objects.get_or_create(user=user)
-        
+
         # Retornar respuesta exitosa
         return Response({
             'message': 'Login exitoso',
@@ -218,18 +217,22 @@ def perfil_usuario(request):
     serializer = UsuarioSerializer(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])  # Acepta peticiones GET
-@permission_classes([IsAuthenticated])  # Solo Usuarios autenticados pueden acceder
-def dashboard(request):
+# Solo Usuarios autenticados pueden acceder
+@permission_classes([IsAuthenticated])
+def dashboard(request):  # DASHBOARD
     """
     Endpoint para obtener estadísticas del dashboard.
+    Admin: estatisticas generales.
+    Padre: estado del formulario + estudiantes asociados.
 
     Args:
         request: Objeto de petición HTTP (usuario debe estar autenticado)
     """
     user = request.user  # Usuario autenticado
 
-    if user.role == 'admin': # Si es admin, mostrar estadísticas generales
+    if user.role == 'admin':  # ADMIN
         data = {
             "mensaje": "Bienvenido al dashboard de administrador",
             "total_padres": Padres.objects.count(),
@@ -237,43 +240,68 @@ def dashboard(request):
             "total_tutores": Tutor_receptor.objects.count(),
             "padres_aprobados": Padres.objects.filter(aprobado=True).count(),
         }
-    elif user.role == 'padre': # Si es padre, mostrar sus estudiantes
+    elif user.role == 'padre':  # PADRE
         try:
             padre = Padres.objects.get(usuario=user)
             data = {
                 "mensaje": f"Bienvenido al dashboard, {user.nombre}",
-                "estudiantes": EstudiantesSerializer(padre.estudiantes_set.all(), many=True).data,
+                "formulario_enviado": True,
+                "formulario_aprobado": padre.aprobado,
+                "cedula": padre.cedula,
+                "celular": padre.celular,
+                "estudiantes": EstudiantesSerializer(padre.estudiantes.all(), many=True).data
             }
-        except Padres.DoesNotExist: # Si el padre no existe, retornar error
-            data = {"error": "No se encontró información del padre."}
+        except Padres.DoesNotExist:  # Padre no ha llenado el formulario
+            data = {
+                "mensaje": f"Bienvenido al dashboard, {user.nombre}",
+                "formulario_enviado": False,
+                "formulario_aprobado": None,
+                "cedula": None,
+                "celular": user.telefono,
+                "estudiantes": []
+            }
     else:
         data = {"error": "Rol de usuario no reconocido."}
     return Response(data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])  # Solo acepta peticiones POST
+# Solo usuarios autenticados pueden acceder
+@permission_classes([IsAuthenticated])
 def enviar_formulario(request):
+    """
+    Endpoint para que un padre envíe el formulario con sus datos, estudiantes y tutores
+    Args:
+        request: Objeto de petición HTTP (usuario debe estar autenticado como padre)
+    """
     user = request.user
 
-    #solo los padres pueden enviar formularios
+    # solo los padres pueden enviar formularios
     if user.role != 'padre':
-        return JsonResponse({'error': 'No autorizado, solo los padres pueden enviar formularios'}, status=403) # Forbidden
-    
-    try:
-        padre = Padres.objects.get(usuario=user)
-    except Padres.DoesNotExist:
-        # Crear el padre si no existe
-        padre = Padres.objects.create(usuario=user, cedula=request.data.get('cedula'), celular=request.data.get('celular')) 
-    
-    serializer = FormularioSerializer(data=request.data)
+        # Forbidden
+        return JsonResponse({'error': 'No autorizado, solo los padres pueden enviar formularios'}, status=403)
+
+    padre_obj, created = Padres.objects.get_or_create(usuario=user, defaults={  # Si no existe, crear nuevo
+        "cedula": request.data.get('cedula', ''),
+        "celular": request.data.get('celular', user.telefono or ''),
+    })  # Obtener o crear el objeto Padre asociado al usuario
+
+    # El serializer recibe la instancia del padre y los datos a actualizar
+    data = request.data.copy()  # Copiar los datos para modificarlos
+
+    # Me aseguro que la relacion al padre sea gestionada por el serializer
+    # El Formularioserilazer no debe recibir el campo 'usuario' directamente
+
+    serializer = FormularioSerializer(data=data)
     if serializer.is_valid():
-        # Guardar el formulario y los datos anidados
-        serializer.save()
-        return JsonResponse(serializer.data, status=201)  # Created
-    return JsonResponse(serializer.errors, status=400)  # Bad Request
+        serializer(padre=padre_obj)  # Asignar el padre al serializer
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['DELETE'])  # Elimina el Usuario
-@permission_classes([IsAuthenticated, IsAdminUser])  # Solo admins pueden eliminar usuarios
+# Solo admins pueden eliminar usuarios
+@permission_classes([IsAuthenticated, IsAdminUser])
 def eliminar_usuario(request, pk):
     """
     Endpoint para que un administrador elimine un usuario por su ID.
@@ -293,13 +321,16 @@ def eliminar_usuario(request, pk):
         user.delete()  # Eliminar el usuario asociado
         return Response({'message': 'Formulario y Usuario eliminado exitosamente'}, status=status.HTTP_200_OK)
     except Padres.DoesNotExist:
-        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)  # Si no existe, retornar error 404
+        # Si no existe, retornar error 404
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        return Response({'error': f'Error eliminando usuario: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)  # Otros errores
+        # Otros errores
+        return Response({'error': f'Error eliminando usuario: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['PATCH'])  # Solo acepta peticiones PATCH
-@permission_classes([IsAuthenticated, IsAdminUser])  # Solo admins pueden aprobar
+# Solo admins pueden aprobar
+@permission_classes([IsAuthenticated, IsAdminUser])
 def aprobar_padre(request, pk):
     """
     Endpoint para que un administrador apruebe a un padre.
@@ -312,27 +343,31 @@ def aprobar_padre(request, pk):
         Response: Padre aprobado o mensaje de error
     """
     try:
-       padre = Padres.objects.get(pk=pk) # Obtener el padre por ID
+        padre = Padres.objects.get(pk=pk)  # Obtener el padre por ID
     except Padres.DoesNotExist:
-     return Response({'error': 'Padre no encontrado'}, status=status.HTTP_404_NOT_FOUND) # Si no existe, retornar error 404
-                              
-    aprobado = request.data.get('aprobado') # Obtener el campo 'aprobado' del cuerpo de la petición
+        # Si no existe, retornar error 404
+        return Response({'error': 'Padre no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Obtener el campo 'aprobado' del cuerpo de la petición
+    aprobado = request.data.get('aprobado')
     if aprobado is None:
-        return Response({'error': 'Campo "aprobado" es obligatorio'}, status=status.HTTP_400_BAD_REQUEST) # Si no se envía el campo, retornar error 400
-    
+        # Si no se envía el campo, retornar error 400
+        return Response({'error': 'Campo "aprobado" es obligatorio'}, status=status.HTTP_400_BAD_REQUEST)
 
-    padre.aprobado = bool(aprobado) # Actualizar el estado de aprobación
-    padre.save() # Guardar los cambios
+    padre.aprobado = bool(aprobado)  # Actualizar el estado de aprobación
+    padre.save()  # Guardar los cambios
 
-    return Response ({
-        "message": f"Padre {'aprobado' if padre.aprobado else 'desaprobado'} exitosamente", # Mensaje de éxito
+    return Response({
+        # Mensaje de éxito
+        "message": f"Padre {'aprobado' if padre.aprobado else 'desaprobado'} exitosamente",
         "padre": PadresSerializer(padre).data
 
-    }, status=status.HTTP_200_OK) # Retornar el padre actualizado
+    }, status=status.HTTP_200_OK)  # Retornar el padre actualizado
 
 # ============================================================================
 # VISTAS PARA CRUD DE PADRES
 # ============================================================================
+
 
 class PadresListCreateView(generics.ListCreateAPIView):
     """
@@ -358,8 +393,6 @@ class PadresDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PadresSerializer  # Serializer a usar
     permission_classes = [IsAuthenticated]  # Solo usuarios autenticados
 
-
-       
 
 # ============================================================================
 # VISTAS PARA CRUD DE ESTUDIANTES
@@ -418,6 +451,7 @@ class TutorReceptorDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TutorReceptorSerializer  # Serializer a usar
     permission_classes = [IsAuthenticated]  # Solo usuarios autenticados
 
+
 class FormulariosAdminView(generics.ListAPIView):
     """
     Vista para que los administradores vean todos los formularios enviados por los padres.
@@ -426,7 +460,9 @@ class FormulariosAdminView(generics.ListAPIView):
     """
     queryset = Padres.objects.all()  # Todos los padres (formularios)
     serializer_class = FormularioSerializer  # Serializer a usar
-    permission_classes = [IsAuthenticated, IsAdminUser]  # Solo admins pueden acceder
+    # Solo admins pueden acceder
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
 
 class FromularioDetailAdminView(generics.RetrieveDestroyAPIView):
     """
@@ -437,5 +473,5 @@ class FromularioDetailAdminView(generics.RetrieveDestroyAPIView):
     """
     queryset = Padres.objects.all()  # Todos los padres (formularios)
     serializer_class = FormularioSerializer  # Serializer a usar
-    permission_classes = [IsAuthenticated, IsAdminUser]  # Solo admins pueden acceder
-
+    # Solo admins pueden acceder
+    permission_classes = [IsAuthenticated, IsAdminUser]

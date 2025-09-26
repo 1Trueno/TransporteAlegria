@@ -1,5 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar.jsx";
 import HeroSection from "./components/HeroSection.jsx";
@@ -10,21 +15,50 @@ import ServiciosSection from "./components/ServiciosSection.jsx";
 import TestimoniosSection from "./components/TestimoniosSection.jsx";
 import ContactosSection from "./components/ContactosSection.jsx";
 import CTASection from "./components/CTASection.jsx";
-import Dashboard from "./components/Dashboard.jsx";
+import DashboardAdmin from "./components/DashboardAdmin.jsx";
+import DashboardPadre from "./components/DashboardPadre.jsx";
 
+import { getCurrentUser, isAuthenticated } from "./services/api.js";
 // Importar componentes
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isAuthenticated()) {
+        try {
+          const u = await getCurrentUser();
+          setUser(u);
+        } catch (error) {
+          console.error("Error obteniendo Usuario:", error);
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-white to-blue-300">
       <Router>
+        {/* Rutas de navegacion*/}
         <Routes>
-          {/* Rutas de navegacion*/}
+          {/* Home*/}
           <Route
             path="/"
             element={
               <div>
-                {/* Home*/}
                 <Navbar />
                 <HeroSection />
                 <CTASection />
@@ -35,6 +69,8 @@ function App() {
               </div>
             }
           />
+
+          {/*Login*/}
           <Route
             path="/login"
             element={
@@ -43,6 +79,7 @@ function App() {
               </div>
             }
           />
+          {/*Registro*/}
           <Route
             path="/registro"
             element={
@@ -53,12 +90,11 @@ function App() {
           />
           {/* Otras rutas */}
           <Route
-            path="/dashboard" 
+            path="/dashboard"
             element={
-            <div>
-              <Dashboard /> 
-            </div>
-          } />
+              user?.role == "admin" ? <DashboardAdmin /> : <DashboardPadre />
+            }
+          />
         </Routes>
       </Router>
     </div>
